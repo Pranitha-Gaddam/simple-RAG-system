@@ -1,30 +1,503 @@
 <!doctype html>
-<html>
-  <head>
-    <title>Semantic Notes Search</title>
-  </head>
-  <body>
-    <h1>Semantic Notes Search</h1>
-    <button onclick="buildIndex()">Build Index</button>
-    <input id="q" placeholder="Search query" />
-    <button onclick="doSearch()">Search</button>
-    <pre id="out"></pre>
-    <script>
-      async function buildIndex() {
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Semantic Search - Base Implementation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(15deg, #ffffff 0%, #fff8f2cf 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #000000;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 246, 240, 0.758);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(60deg, #fffdf7 0%, #d1c8c082 20%, #fffdfb 50%, #d1c8c082 75%, #fefcf8 100%);
+      color: rgb(88, 55, 39);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 1.1em;
+      opacity: 0.95;
+      margin-top: 10px;
+    }
+
+    .content {
+      padding: 40px;
+      background: #ffffff 0;
+    }
+
+    .info-section {
+      background: rgba(246, 245, 242, 0.7);
+      border-left: 4px solid rgb(88, 55, 39);
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .info-section h2 {
+      color: rgb(88, 55, 39);
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .info-section p {
+      line-height: 1.6;
+      color: rgb(88, 55, 39);
+      margin-bottom: 10px;
+    }
+
+    .info-section ul {
+      margin-left: 20px;
+      margin-top: 10px;
+      color: rgb(88, 55, 39);
+    }
+
+    .info-section li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .action-section {
+      margin-bottom: 30px;
+    }
+
+    .action-card {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .action-card h3 {
+      color: rgb(88, 55, 39);
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .action-card p {
+      color: rgb(88, 55, 39);
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: linear-gradient(135deg, rgb(88, 55, 39) 0%, rgb(120, 75, 55) 100%);
+      color: #fff5da;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(88, 55, 39, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .search-group {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      min-width: 300px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid rgba(88, 55, 39, 0.3);
+      border-radius: 8px;
+      font-size: 1em;
+      background: rgba(255, 255, 255, 0.8);
+      color: rgb(88, 55, 39);
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: rgb(88, 55, 39);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .status.success {
+      background: rgba(139, 195, 74, 0.2);
+      color: rgb(88, 55, 39);
+      border: 1px solid rgba(139, 195, 74, 0.5);
+      display: block;
+    }
+
+    .status.error {
+      background: rgba(244, 67, 54, 0.2);
+      color: rgb(88, 55, 39);
+      border: 1px solid rgba(244, 67, 54, 0.5);
+      display: block;
+    }
+
+    .status.info {
+      background: rgba(255, 193, 7, 0.2);
+      color: rgb(88, 55, 39);
+      border: 1px solid rgba(255, 193, 7, 0.5);
+      display: block;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid rgba(255, 245, 218, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff5da;
+      animation: spin 0.8s linear infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .results-section {
+      margin-top: 30px;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .results-header h2 {
+      color: rgb(88, 55, 39);
+      font-size: 1.5em;
+    }
+
+    .results-count {
+      color: rgb(88, 55, 39);
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(88, 55, 39, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: box-shadow 0.3s, transform 0.2s;
+      backdrop-filter: blur(10px);
+    }
+
+    .result-card:hover {
+      box-shadow: 0 4px 12px rgba(88, 55, 39, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .result-source {
+      color: rgb(88, 55, 39);
+      font-weight: 600;
+      font-size: 0.95em;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .result-score {
+      background: rgba(139, 195, 74, 0.3);
+      color: rgb(88, 55, 39);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      font-weight: 600;
+    }
+
+    .result-text {
+      color: rgb(88, 55, 39);
+      line-height: 1.7;
+      font-size: 1em;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid rgb(88, 55, 39);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: rgb(88, 55, 39);
+      opacity: 0.7;
+    }
+
+    .no-results-icon {
+      font-size: 3em;
+      margin-bottom: 15px;
+    }
+
+    code {
+      background: rgba(88, 55, 39, 0.1);
+      color: rgb(88, 55, 39);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>RAG Semantic Search</h1>
+      <p>Base-Level RAG Implementation for Document Retrieval</p>
+    </div>
+
+    <div class="content">
+      <div class="info-section">
+        <h2>What is RAG?</h2>
+        <p>
+          <strong>RAG (Retrieval-Augmented Generation)</strong> is a technique that combines information retrieval with AI to find and retrieve relevant documents based on meaning, not just keywords.
+        </p>
+        <p><strong>How it works:</strong></p>
+        <ul>
+          <li><strong>Step 1 - Build Index:</strong> Your documents are processed, split into chunks, and converted into vector embeddings (mathematical representations that capture meaning)</li>
+          <li><strong>Step 2 - Search:</strong> When you search, your query is also converted to a vector and compared against all document chunks</li>
+          <li><strong>Step 3 - Retrieve:</strong> The system finds the top-k most relevant chunks based on semantic similarity and returns them to you</li>
+        </ul>
+        <p style="margin-top: 15px;">
+          <strong>Why it's powerful:</strong> Unlike traditional keyword search, RAG understands context and meaning. For example, searching for "AI learning" will find documents about "machine learning" even though the exact words don't match!
+        </p>
+        <p style="margin-top: 15px;">
+          <strong>About the k parameter:</strong> The "k" in top-k retrieval refers to the maximum number of results to return. This is a standard concept in all RAG systems. You can adjust k based on your needs - higher k returns more results but may include less relevant ones. The system will return up to k results, but may return fewer if there aren't enough relevant matches in the index.
+        </p>
+      </div>
+
+      <div class="action-section">
+        <div class="action-card">
+          <h3>Step 1: Build the Index</h3>
+          <p>
+            Click the button below to process all documents in the <code>notes/</code> folder. 
+            The system will split them into chunks, generate embeddings, and create a searchable index. 
+            You can add or edit the documents in the <code>notes/</code> folder and rebuild the index anytime.
+          </p>
+          <p style="font-size: 0.9em; color: rgb(88, 55, 39); opacity: 0.8; margin-top: 10px; font-style: italic;">
+            Note: Default example documents are provided covering topics like RAG systems, machine learning, neural networks, vector embeddings, natural language processing, information retrieval, database systems, and API design.
+          </p>
+          <div class="button-group">
+            <button id="buildBtn" onclick="buildIndex()">Build Index</button>
+            <span id="buildStatus" class="status"></span>
+          </div>
+        </div>
+
+          <div class="action-card">
+            <h3>Step 2: Search Your Documents</h3>
+            <p>
+              Enter a search query below. The RAG system will find the most relevant document chunks based on semantic similarity 
+              and return the top-k results. The k parameter controls how many results to retrieve (default: 5, max: 20). 
+              Try natural language queries like "How does machine learning work?" or "What are vector embeddings?"
+            </p>
+            <div class="button-group">
+              <div class="search-group">
+                <input 
+                  type="text" 
+                  id="q" 
+                  placeholder="Enter your search query (e.g., 'How does machine learning work?')" 
+                  onkeypress="if(event.key === 'Enter') doSearch()"
+                />
+                <label for="kValue" style="color: rgb(88, 55, 39); font-size: 0.9em; white-space: nowrap; align-self: center;">Top-k:</label>
+                <input 
+                  type="number" 
+                  id="kValue" 
+                  min="1" 
+                  max="20" 
+                  value="5" 
+                  style="width: 60px; padding: 12px 8px; border: 2px solid rgba(88, 55, 39, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.8); color: rgb(88, 55, 39); font-size: 1em;"
+                />
+                <button id="searchBtn" onclick="doSearch()">Search</button>
+              </div>
+            </div>
+            <span id="searchStatus" class="status"></span>
+          </div>
+      </div>
+
+      <div class="results-section" id="resultsSection" style="display: none;">
+        <div class="results-header">
+          <h2>Search Results</h2>
+          <span class="results-count" id="resultsCount"></span>
+        </div>
+        <div id="results"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function buildIndex() {
+      const btn = document.getElementById('buildBtn');
+      const status = document.getElementById('buildStatus');
+      
+      btn.disabled = true;
+      btn.innerHTML = 'Building Index<span class="loading"></span>';
+      status.className = 'status info';
+      status.textContent = 'Processing documents and generating embeddings... This may take a moment.';
+      status.style.display = 'block';
+
+      try {
         const r = await fetch('/index', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: '{}'
         });
-        document.getElementById('out').textContent =
-          r.ok ? await r.text() : `Error ${r.status}: ${await r.text()}`;
+
+        const data = await r.json();
+        
+        if (r.ok) {
+          status.className = 'status success';
+          status.textContent = `Index built successfully! ${data.chunks_indexed} document chunks are now searchable.`;
+        } else {
+          throw new Error(data.detail || `Error ${r.status}`);
+        }
+      } catch (error) {
+        status.className = 'status error';
+        status.textContent = `Error: ${error.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Build Index';
       }
-      async function doSearch() {
-        const q = document.getElementById('q').value;
-        const r = await fetch('/search?q=' + encodeURIComponent(q));
-        document.getElementById('out').textContent =
-          r.ok ? await r.text() : `Error ${r.status}: ${await r.text()}`;
+    }
+
+    async function doSearch() {
+      const query = document.getElementById('q').value.trim();
+      const btn = document.getElementById('searchBtn');
+      const status = document.getElementById('searchStatus');
+      const resultsSection = document.getElementById('resultsSection');
+      const resultsDiv = document.getElementById('results');
+      const resultsCount = document.getElementById('resultsCount');
+
+      if (!query) {
+        status.className = 'status error';
+        status.textContent = 'Please enter a search query.';
+        status.style.display = 'block';
+        return;
       }
-    </script>
-  </body>
+
+      btn.disabled = true;
+      btn.innerHTML = 'Searching<span class="loading"></span>';
+      status.className = 'status info';
+      status.textContent = 'Searching for relevant documents...';
+      status.style.display = 'block';
+      resultsSection.style.display = 'none';
+
+      const k = parseInt(document.getElementById('kValue').value) || 5;
+      const kValue = Math.max(1, Math.min(20, k)); // Ensure k is between 1 and 20
+      
+      try {
+        const r = await fetch('/search?q=' + encodeURIComponent(query) + '&k=' + kValue);
+        const data = await r.json();
+
+        if (r.ok) {
+          status.className = 'status success';
+          status.textContent = `Found ${data.results.length} relevant result${data.results.length !== 1 ? 's' : ''}.`;
+          
+          if (data.results.length === 0) {
+            resultsDiv.innerHTML = `
+              <div class="no-results">
+                <div class="no-results-icon">🔍</div>
+                <p>No results found. Try a different query or rebuild the index.</p>
+              </div>
+            `;
+          } else {
+            resultsDiv.innerHTML = data.results.map((result, idx) => `
+              <div class="result-card">
+                <div class="result-header">
+                  <span class="result-source">📄 ${result.source.replace('notes/', '')}</span>
+                  <span class="result-score">Relevance: ${(result.score * 100).toFixed(1)}%</span>
+                </div>
+                <div class="result-text">${escapeHtml(result.text)}</div>
+              </div>
+            `).join('');
+          }
+
+          resultsCount.textContent = `${data.results.length} result${data.results.length !== 1 ? 's' : ''} found`;
+          resultsSection.style.display = 'block';
+        } else {
+          throw new Error(data.detail || `Error ${r.status}`);
+        }
+      } catch (error) {
+        status.className = 'status error';
+        status.textContent = `Error: ${error.message}`;
+        resultsSection.style.display = 'none';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search';
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
 </html>

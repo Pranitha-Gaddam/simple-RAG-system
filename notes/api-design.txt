@@ -1,0 +1,28 @@
+RESTful API Design Best Practices
+
+REST (Representational State Transfer) is an architectural style for designing web services. RESTful APIs use HTTP methods to perform operations on resources identified by URLs.
+
+HTTP Methods
+
+GET is used to retrieve data without side effects. POST creates new resources or triggers actions. PUT updates entire resources. PATCH performs partial updates. DELETE removes resources.
+
+API Design Principles
+
+Resource-based URLs use nouns, not verbs. For example, /users/123 is better than /getUser?id=123. Resources should be hierarchical and intuitive.
+
+Stateless design means each request should contain all information needed to process it. The server shouldn't rely on stored context between requests.
+
+Consistent Response Format means using consistent JSON structures. Include status codes, error messages, and data in predictable formats.
+
+Versioning involves including API version in the URL path (e.g., /v1/users) or headers to allow evolution without breaking clients.
+
+Error Handling
+
+Return appropriate HTTP status codes. 200 indicates success, 201 indicates created, 400 indicates bad request, 404 indicates not found, and 500 indicates server error.
+
+Include descriptive error messages that help developers understand and fix issues. Provide both human-readable messages and machine-readable error codes.
+
+Documentation
+
+Good API documentation is essential. Use tools like OpenAPI/Swagger to generate interactive documentation. Include examples, parameter descriptions, and response schemas. Clear documentation reduces integration time and support requests.
+

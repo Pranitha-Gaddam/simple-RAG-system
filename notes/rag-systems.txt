@@ -1,0 +1,20 @@
+Retrieval-Augmented Generation (RAG)
+
+RAG combines the power of information retrieval with generative AI to produce more accurate and contextually relevant responses. Instead of relying solely on a model's training data, RAG systems retrieve relevant documents and use them as context for generation.
+
+RAG Architecture
+
+A typical RAG system has three main components. First, a Document Store which is a collection of documents that serve as the knowledge base. Second, a Retrieval System that finds relevant documents based on user queries using semantic search. Third, a Generation Model that uses retrieved context to generate accurate responses.
+
+How RAG Works
+
+When a user asks a question, the system first converts the query into a vector embedding. This embedding is compared against embeddings of document chunks stored in a vector database. The most similar chunks are retrieved and passed as context to a language model, which generates a response grounded in the retrieved information.
+
+Benefits of RAG
+
+RAG systems offer several advantages over traditional language models. They can access up-to-date information from recent documents not in training data. They reduce hallucinations by grounding responses in retrieved facts. They can work with domain-specific knowledge from specialized document collections. They provide transparency by citing sources from retrieved documents.
+
+Implementation Considerations
+
+Effective RAG requires careful chunking strategies, good embedding models, and efficient vector search. The chunk size and overlap affect how context is preserved. The choice of embedding model impacts retrieval quality, and the vector database must scale with document volume.
+

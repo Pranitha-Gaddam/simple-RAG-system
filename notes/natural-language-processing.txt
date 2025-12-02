@@ -1,0 +1,22 @@
+Natural Language Processing Fundamentals
+
+Natural Language Processing, or NLP, is a branch of artificial intelligence that focuses on enabling computers to understand, interpret, and generate human language. It combines computational linguistics with machine learning to process text and speech data.
+
+Core NLP Tasks
+
+Tokenization is the process of breaking text into individual words or tokens. This is often the first step in NLP pipelines. Stemming and lemmatization reduce words to their root forms, helping systems recognize that running, runs, and ran are related.
+
+Part-of-speech tagging identifies whether words are nouns, verbs, adjectives, and so on. Named entity recognition identifies and classifies entities like people, organizations, and locations in text.
+
+Sentiment analysis determines the emotional tone of text, whether it's positive, negative, or neutral. This is widely used in social media monitoring and customer feedback analysis.
+
+Modern NLP with Transformers
+
+Transformer models revolutionized NLP by using attention mechanisms to understand relationships between words regardless of their position in a sentence. Models like BERT and GPT use transformers to achieve state-of-the-art performance on many NLP tasks.
+
+These models are pre-trained on massive text corpora and can be fine-tuned for specific tasks. They generate contextual embeddings that capture meaning based on surrounding words, making them powerful for semantic understanding.
+
+Applications
+
+NLP powers many everyday applications including chatbots, translation services, search engines, voice assistants, and content recommendation systems. It enables machines to understand human intent and respond appropriately.
+

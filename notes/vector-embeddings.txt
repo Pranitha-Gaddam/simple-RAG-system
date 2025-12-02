@@ -1,0 +1,20 @@
+Vector Embeddings and Semantic Search
+
+Vector embeddings are numerical representations of text, images, or other data that capture semantic meaning in a high-dimensional space. Words or sentences with similar meanings are positioned close together in this embedding space.
+
+How Embeddings Work
+
+Embeddings are created using neural networks trained on large text corpora. The model learns to map words and phrases to dense vectors where semantic relationships are preserved. For example, king and queen would have similar embeddings, as would happy and joyful.
+
+Semantic Similarity
+
+Semantic similarity measures how similar two pieces of text are in meaning, not just in words. Traditional keyword search matches exact words, but semantic search understands context and meaning. This allows finding relevant documents even when they use different terminology.
+
+Applications
+
+Vector embeddings power many modern AI applications including search engines that understand user intent, recommendation systems that find similar content, question answering systems that retrieve relevant context, and document clustering and organization.
+
+Cosine Similarity
+
+The similarity between two vectors is typically measured using cosine similarity, which calculates the cosine of the angle between vectors. This works well with normalized embeddings and ranges from -1 (opposite) to 1 (identical).
+

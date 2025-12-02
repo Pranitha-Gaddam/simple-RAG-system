@@ -1,0 +1,26 @@
+Information Retrieval Systems
+
+Information retrieval is the science of searching for information in documents and databases. It involves finding material that satisfies an information need from within large collections of unstructured or semi-structured data.
+
+Traditional Search Methods
+
+Boolean search uses logical operators like AND, OR, and NOT to combine search terms. While precise, it requires users to understand Boolean logic and may miss relevant documents that don't match exact query terms.
+
+Keyword-based search matches documents containing query terms. This approach is simple but limited because it doesn't understand context or synonyms. A search for car won't find documents mentioning automobile even though they mean the same thing.
+
+Ranking Algorithms
+
+TF-IDF (Term Frequency-Inverse Document Frequency) ranks documents by how important query terms are relative to the document collection. Terms that appear frequently in a document but rarely in the collection are given higher weight.
+
+PageRank and similar algorithms rank documents based on their importance and connections to other documents. This is how search engines determine which results to show first.
+
+Modern Semantic Retrieval
+
+Semantic retrieval uses vector embeddings and similarity search to find documents based on meaning rather than exact word matches. This allows systems to understand that machine learning and artificial intelligence are related concepts even if the exact words don't appear.
+
+Vector databases store document embeddings and enable fast similarity search across millions of documents. This is the foundation of modern RAG systems and semantic search engines.
+
+Evaluation Metrics
+
+Information retrieval systems are evaluated using metrics like precision, which measures how many retrieved documents are relevant, and recall, which measures how many relevant documents were retrieved. F1 score combines both metrics for a balanced evaluation.
+

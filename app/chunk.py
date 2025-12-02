@@ -7,7 +7,7 @@ ALLOWED_EXTS = {".md", ".txt"}
 
 
 def load_text_files(folder: Path) -> List[Path]:
-    """Load all markdown and text files from folder recursively."""
+    """Load all text files from folder recursively."""
     paths: List[Path] = []
     for p in folder.rglob("*"):
         if p.suffix.lower() in ALLOWED_EXTS and p.is_file():

@@ -1,0 +1,21 @@
+Machine Learning Fundamentals
+
+Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed. It focuses on the development of computer programs that can access data and use it to learn for themselves.
+
+Types of Machine Learning
+
+Supervised Learning
+Supervised learning uses labeled training data to learn a mapping function from inputs to outputs. Common algorithms include linear regression, decision trees, and neural networks. The model is trained on a dataset where the correct answers are known, allowing it to make predictions on new, unseen data.
+
+Unsupervised Learning
+Unsupervised learning finds hidden patterns in data without labeled examples. Clustering and dimensionality reduction are common techniques. This approach is useful when you don't know what you're looking for in the data.
+
+Reinforcement Learning
+Reinforcement learning involves an agent learning to make decisions by interacting with an environment. The agent receives rewards or penalties for its actions and learns to maximize cumulative reward over time.
+
+Key Concepts
+
+Features are the input variables used to make predictions. Labels are the output variables we're trying to predict. Training is the process of teaching the model using historical data. Inference is using the trained model to make predictions on new data.
+
+The quality of machine learning models depends heavily on the quality and quantity of training data. Feature engineering, the process of selecting and transforming input variables, is crucial for model performance.
+

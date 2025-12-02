@@ -1,0 +1,26 @@
+Database Systems and Vector Storage
+
+Databases are organized collections of data that can be efficiently stored, retrieved, and managed. Traditional relational databases use tables with rows and columns, while modern systems include NoSQL databases and specialized vector databases for AI applications.
+
+Relational Databases
+
+Relational databases organize data into tables with relationships between them. They use SQL (Structured Query Language) for querying and maintain data integrity through constraints and transactions. ACID properties ensure transactions are atomic, consistent, isolated, and durable.
+
+These databases excel at structured data and complex queries involving joins across multiple tables. They're widely used for transactional systems where data consistency is critical.
+
+NoSQL Databases
+
+NoSQL databases provide alternatives for unstructured or semi-structured data. Document databases store data as JSON-like documents, key-value stores provide simple lookups, and graph databases model relationships between entities.
+
+NoSQL systems often prioritize scalability and flexibility over strict consistency. They're well-suited for applications with rapidly changing schemas or massive scale requirements.
+
+Vector Databases
+
+Vector databases are specialized systems designed for storing and searching high-dimensional vector embeddings. They use approximate nearest neighbor algorithms to quickly find similar vectors, which is essential for semantic search and RAG systems.
+
+Unlike traditional databases that search for exact matches, vector databases find items based on similarity in embedding space. This enables finding semantically similar content even when exact keywords don't match.
+
+Indexing Strategies
+
+B-tree indexes are common in relational databases for range queries. Inverted indexes power full-text search by mapping terms to documents containing them. Vector indexes like those in FAISS use techniques like product quantization and hierarchical navigable small world graphs for efficient similarity search.
+

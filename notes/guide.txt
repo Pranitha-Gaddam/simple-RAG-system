@@ -1,3 +1,0 @@
-Getting Started
-
-Install the CLI, then run 'mytool init'. If you face issues, check the logs in ~/.mytool/logs.
