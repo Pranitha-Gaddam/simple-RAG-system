@@ -1,10 +1,12 @@
-<!-- app/static/index.html -->
 <!doctype html>
 <html>
+  <head>
+    <title>Semantic Notes Search</title>
+  </head>
   <body>
     <h1>Semantic Notes Search</h1>
     <button onclick="buildIndex()">Build Index</button>
-    <input id="q" placeholder="search query" />
+    <input id="q" placeholder="Search query" />
     <button onclick="doSearch()">Search</button>
     <pre id="out"></pre>
     <script>
@@ -12,7 +14,7 @@
         const r = await fetch('/index', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: '{}'  // empty JSON body so FastAPI is happy
+          body: '{}'
         });
         document.getElementById('out').textContent =
           r.ok ? await r.text() : `Error ${r.status}: ${await r.text()}`;
