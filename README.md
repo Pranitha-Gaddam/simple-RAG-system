@@ -93,4 +93,4 @@ This implementation demonstrates the core RAG pipeline:
    - Top-k most similar chunks are retrieved
 6. **Retrieval**: Results are returned with similarity scores, source files, and chunk text
 
-**Notice**: The system finds relevant content even when the exact words don't match! Try queries like "AI learning algorithms" and see how it connects to machine learning and neural networks. This demonstrates the power of semantic search - it understands meaning and relationships, not just keywords.
+**Notice**: The system finds relevant content even when the exact words don't match! Try queries like "AI learning algorithms" and see how it connects to machine learning and neural networks. Semantic search understands meaning and relationships, not just keywords.
