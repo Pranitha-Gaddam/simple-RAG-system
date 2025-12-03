@@ -11,4 +11,4 @@ venv/
 README.md
 .DS_Store
 *.md
-
+data/
